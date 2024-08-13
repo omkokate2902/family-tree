@@ -36,8 +36,8 @@ jobs:
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}  # EC2 public IP or DNS
-        username: ${{ secrets.EC2_USERNAME }}  # e.g., ubuntu
-        key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
+        username: ${{ secrets.EC2_USER }}  # e.g., ubuntu
+        key: ${{ secrets.EC2_KEY }}  # Your private SSH key
         script: |
           # Pull the latest Docker image
           docker pull omkokate2902/family-tree-testing:latest
