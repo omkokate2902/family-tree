@@ -35,7 +35,7 @@ jobs:
     - name: SSH into EC2 and Deploy
       uses: appleboy/ssh-action@v0.1.7
       with:
-        host: ${{ secrets.EC2_HOST }}  # EC2 public IP or DNS
+        host: ${{ secrets.EC2_HOST_TEST }}  # EC2 public IP or DNS
         username: ${{ secrets.EC2_USER }}  # e.g., ubuntu
         key: ${{ secrets.EC2_KEY }}  # Your private SSH key
         script: |
@@ -43,8 +43,8 @@ jobs:
           docker pull omkokate2902/family-tree-testing:latest
 
           # Stop and remove the existing container
-          docker stop familt-tree-testing || true
-          docker rm familt-tree-testing || true
+          docker stop family-tree-testing || true
+          docker rm family-tree-testing || true
 
           # Run the new container with port 3000:3000
-          docker run -d --name familt-tree-testing -p 3000:3000 omkokate2902/family-tree-testing:latest
+          docker run -d --name family-tree-testing -p 3000:3000 omkokate2902/family-tree-testing:latest
