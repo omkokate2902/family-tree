@@ -3,13 +3,13 @@ name: CI/CD Pipeline Testing
 on:
   push:
     branches:
-      - testing
+      - testing  # Changed to the 'testing' branch
   pull_request:
     branches:
       - testing
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +31,20 @@ jobs:
         context: .
         push: true
         tags: omkokate2902/family-tree-testing:latest
+
+    - name: SSH into EC2 and Deploy
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}  # EC2 public IP or DNS
+        username: ${{ secrets.EC2_USERNAME }}  # e.g., ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}  # Your private SSH key
+        script: |
+          # Pull the latest Docker image
+          docker pull omkokate2902/family-tree-testing:latest
+
+          # Stop and remove the existing container
+          docker stop familt-tree-testing || true
+          docker rm familt-tree-testing || true
+
+          # Run the new container with port 3000:3000
+          docker run -d --name familt-tree-testing -p 3000:3000 omkokate2902/family-tree-testing:latest
