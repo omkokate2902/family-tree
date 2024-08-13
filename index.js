@@ -6,6 +6,6 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {  // Listen on all interfaces
     console.log(`Server is running on port ${PORT}`);
 });
