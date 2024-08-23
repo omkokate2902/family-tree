@@ -10,7 +10,7 @@ app.use(express.json()); // Parse JSON bodies
 connectDB();
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Testing Branch');
 });
 
 // Use the family routes
