@@ -9,6 +9,10 @@ app.use(express.json()); // Parse JSON bodies
 // Connect to MongoDB
 connectDB();
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 // Use the family routes
 app.use('/api/families', familyRoutes);
 
