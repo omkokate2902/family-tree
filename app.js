@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 });
 
 // Use the family routes
-app.use('/api/families', familyRoutes);
+app.use('/api', familyRoutes);
 
 // Use the error handler middleware
 app.use(errorHandler);

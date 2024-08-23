@@ -1,7 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const familyController = require('../controllers/familyController');
+const { addFamily, getFamilyByUserId } = require('../controllers/familyController');
 
-router.post('/', familyController.addFamily);
+const router = express.Router();
+
+// Route to add family data
+router.post('/families', addFamily);
+
+// Route to get family data by user_id
+router.get('/families/:user_id', getFamilyByUserId);
 
 module.exports = router;

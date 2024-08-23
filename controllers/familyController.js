@@ -16,6 +16,21 @@ const addFamily = async (req, res) => {
   }
 };
 
+// GET API to retrieve family tree data by user_id
+const getFamilyByUserId = async (req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const family = await Family.findOne({ user_id: userId });
+    if (!family) {
+      return res.status(404).json({ error: 'Family not found' });
+    }
+    res.json(family);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong!' });
+  }
+};
+
 module.exports = {
   addFamily,
+  getFamilyByUserId,
 };
