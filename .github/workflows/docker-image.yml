@@ -47,4 +47,4 @@ jobs:
           docker rm family-tree-testing || true
 
           # Run the new container with port 3000:3000
-          docker run -d --name family-tree-testing -p 3000:3000 omkokate2902/family-tree-testing:latest
+          docker run -d --name family-tree-testing -p 3000:3000 -e DB_URI="${{ secrets.DB_URI }}" -e JWT_SECRET="${{ secrets.JWT_SECRET }}" omkokate2902/family-tree-testing:latest
