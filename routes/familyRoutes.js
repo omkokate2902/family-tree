@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/families', addFamily);
 
 // Route to get family data by user_id
-router.get('/families/:user_id', getFamilyByUserId);
+router.get('/families/', getFamilyByUserId);
 
 // Route to delete a family member/child member 
 router.delete('/families/delete-child', deleteChild);

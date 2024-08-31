@@ -5,6 +5,10 @@ const familyService = require('../services/familyService');
 const addFamily = async (req, res) => {
   try {
     const familyData = req.body;
+
+    // Ensure the user_id from the logged-in user is included in the JSON
+    familyData.user_id = req.user.user_id; 
+
     const newFamily = await familyService.createFamily(familyData);
     res.status(201).json("Tree saved");
   } catch (error) {
@@ -19,11 +23,13 @@ const addFamily = async (req, res) => {
 // GET API to retrieve family tree data by user_id
 const getFamilyByUserId = async (req, res) => {
   try {
-    const userId = req.params.user_id;
+    const userId = req.user.user_id;  // Extract user_id from the decoded JWT token
     const family = await Family.findOne({ user_id: userId });
+    
     if (!family) {
       return res.status(404).json({ error: 'Family not found' });
     }
+    
     res.json(family);
   } catch (error) {
     res.status(500).json({ error: 'Something went wrong!' });

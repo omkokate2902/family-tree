@@ -1,10 +1,11 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, jwtExpire } = require('../config/auth');
+const { v4: uuidv4 } = require('uuid'); // Import uuid library
 
-// Generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, JWT_SECRET, {
+// Generate JWT with user_id
+const generateToken = (id, userUniqueId) => {
+  return jwt.sign({ id, user_id: userUniqueId }, JWT_SECRET, {
     expiresIn: jwtExpire,
   });
 };
@@ -17,9 +18,11 @@ const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ error: 'User already exists' });
 
-    const user = await User.create({ username, email, password });
+    // Create user with a unique user_id
+    const user = await User.create({ username, email, password, user_id: uuidv4() });
 
-    const token = generateToken(user._id);
+    // Generate token with user_id
+    const token = generateToken(user._id, user.user_id);
     res.cookie('token', token, { httpOnly: true });
     res.status(201).json({ success: true, data: user });
   } catch (error) {
@@ -37,7 +40,8 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id);
+    // Generate token with user_id
+    const token = generateToken(user._id, user.user_id);
     res.cookie('token', token, { httpOnly: true });
     res.json({ success: true, data: user });
   } catch (error) {

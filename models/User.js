@@ -1,21 +1,27 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 const userSchema = new mongoose.Schema({
+  user_id: {
+    type: String,
+    default: uuidv4,  // Assign a UUID when a new user is created
+    unique: true,
+  },
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 // Hash password before saving
