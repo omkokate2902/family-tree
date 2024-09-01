@@ -36,7 +36,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-// Login User
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,8 +44,6 @@ const loginUser = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    // Generate token with user_id
     const token = generateToken(user._id, user.user_id);
     res.cookie("token", token, { httpOnly: true });
     res.json({ success: true, data: user, token });
