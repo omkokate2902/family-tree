@@ -1,7 +1,7 @@
 const express = require('express');
 const { addFamily, getFamilyByUserId } = require('../controllers/familyController');
-const { deleteFamilyMember, deleteChild } = require('../controllers/deleteChil'); // Importing delete function
-const { deleteFamilyTree }= require('../controllers/deleteIndiv');
+const {  deleteChild } = require('../controllers/deleteChil'); 
+const { deleteTree }= require('../controllers/deleteIndiv');
 const { updateChild } = require('../controllers/patchChild');
 const { addChild } = require('../controllers/addChildController');
 
@@ -21,7 +21,7 @@ router.delete('/families/delete-child', deleteChild);
 router.patch('/families/updateChild', updateChild);
 
 // Route to update a family tree
-router.delete('/families/delete-tree', deleteFamilyTree);
+router.delete('/families/delete-tree', deleteTree);
 
 // Add Child route
 router.post('/families/addChild', addChild);
