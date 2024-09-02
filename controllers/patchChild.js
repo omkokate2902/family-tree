@@ -1,16 +1,15 @@
-const Family = require('../models/Family');  // Adjust the path as needed
+const Family = require('../models/Family');  
 
 const updateChild = async (req, res) => {
-    const { user_id, member_id, updates } = req.body;  // Extract user_id, member_id, and updates from the request body
+    const { member_id, updates } = req.body;  // Extract member_id and updates from the request body
 
     try {
-        const family = await Family.findOne({ user_id: user_id });
+        const family = await Family.findOne({});  
 
         if (!family) {
             return res.status(404).json({ message: 'Family not found' });
         }
 
-        // Recursive function to find and update a child by member_id
         function updateChildById(parent, memberId, updates) {
             if (!parent.children) return false;
 

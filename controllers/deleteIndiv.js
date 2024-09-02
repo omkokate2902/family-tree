@@ -1,33 +1,51 @@
-const Family = require('../models/Family');
+const Family = require('../models/Family'); 
 
-const deleteFamilyTree = async (req, res) => {
-  const { user_id, member_id } = req.body; // Get user_id and member_id from the request body
+const deleteTree = async (req, res) => {
+    const { member_id } = req.body;
 
-  try {
-    const familyMember = await Family.findOne({ user_id, member_id });
+    try {
+        const family = await Family.findOne({});  
 
-    if (!familyMember) {
-      return res.status(404).json({ error: 'Family member not found' });
-    }
-
-    // Recursive function to delete a family member and all their descendants
-    const deleteFamilyMembers = async (member) => {
-      if (member.children && member.children.length > 0) {
-        for (const child of member.children) {
-          await deleteFamilyMembers(child);
+        if (!family) {
+            return res.status(404).json({ message: 'Family not found' });
         }
-      }
-      await Family.deleteOne({ user_id, member_id: member.member_id });
-    };
 
-    await deleteFamilyMembers(familyMember);
+        if (family.member_id === member_id) {
+            await Family.deleteOne({ _id: family._id });  // Delete the entire family tree
+            return res.status(200).json({ message: 'Root tree deleted successfully' });
+        }
 
-    res.json({ success: true, message: 'Family tree deleted' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+        function deleteTreeById(parent, memberId) {
+            if (!parent.children) return false;
+
+            for (let i = 0; i < parent.children.length; i++) {
+                if (parent.children[i].member_id === memberId) {
+                    parent.children.splice(i, 1);  // Delete the tree
+                    return true;
+                }
+
+                if (deleteTreeById(parent.children[i], memberId)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        const deleteSuccess = deleteTreeById(family, member_id);
+
+        if (deleteSuccess) {
+            await family.save();  // Save the updated document
+            res.status(200).json({ message: 'Tree deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Tree not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting tree:', error);
+        res.status(500).json({ message: 'An error occurred' });
+    }
 };
 
 module.exports = {
-  deleteFamilyTree,
+    deleteTree
 };

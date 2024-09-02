@@ -1,22 +1,21 @@
-const Family = require('../models/Family');  // Adjust the path as needed
+const Family = require('../models/Family');  
 
 const deleteChild = async (req, res) => {
-    const { user_id, member_id } = req.body;
+    const { member_id } = req.body;
 
     try {
-        const family = await Family.findOne({ user_id: user_id });
+        const family = await Family.findOne({});  
 
         if (!family) {
             return res.status(404).json({ message: 'Family not found' });
         }
 
-        // Recursive function to delete a child by member_id
         function deleteChildById(parent, memberId) {
             if (!parent.children) return false;
 
             for (let i = 0; i < parent.children.length; i++) {
                 if (parent.children[i].member_id === memberId) {
-                    parent.children.splice(i, 1);
+                    parent.children.splice(i, 1);  // Delete the child
                     return true;
                 }
 
