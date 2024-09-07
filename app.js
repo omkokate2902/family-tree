@@ -18,7 +18,7 @@ app.use(
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("Testing Branch");
+  res.send("Testing Branch Works");
 });
 
 // Middleware
