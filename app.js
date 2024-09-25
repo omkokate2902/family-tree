@@ -18,7 +18,7 @@ app.use(
 connectDB();
 
 app.get("/", (req, res) => {
-  res.send("Testing Branch Works fine");
+  res.send("Testing Branch Works fine on reboot");
 });
 
 // Middleware
