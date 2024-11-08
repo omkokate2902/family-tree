@@ -9,7 +9,7 @@ const cors = require("cors"); // Import the CORS package
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:3001", // Allow requests from this origin
+    origin: "https://vaanshika.netlify.app/", // Allow requests from this origin
     credentials: true, // Allow cookies to be sent
   })
 );
