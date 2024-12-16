@@ -9,10 +9,15 @@ const cors = require("cors"); // Import the CORS package
 const app = express();
 app.use(
   cors({
-    origin: '*',
-    credentials: true, // Allow cookies to be sent
+    origin: (origin, callback) => {
+      // Allow requests from any origin
+      callback(null, origin || '*');
+    },
+    credentials: true, // Allow cookies or authentication headers
   })
 );
+
+app.options('*', cors()); // Allow preflight requests from any origin
 
 // Connect to MongoDB
 connectDB();
