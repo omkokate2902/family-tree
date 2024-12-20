@@ -4,16 +4,15 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const familyRoutes = require('./routes/familyRoutes');
 const { protect } = require('./middlewares/authMiddleware');
-
 const app = express();
+const cors = require('cors');
+
 app.use(
   cors({
-    origin: "http://localhost:3001", // Allow requests from this origin
+    origin: "*", // Allow requests from this origin
     credentials: true, // Allow cookies to be sent
   })
 );
-
-const app = express();
 
 // Connect to MongoDB
 connectDB();
@@ -31,5 +30,5 @@ app.use('/api/auth', authRoutes);
 app.use('/api', protect, familyRoutes);
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
