@@ -1,0 +1,50 @@
+name: CI/CD Pipeline Testing
+
+on:
+  push:
+    branches:
+      - testing  # Changed to the 'testing' branch
+  pull_request:
+    branches:
+      - testing
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: omkokate2902/family-tree-testing:latest
+
+    - name: SSH into EC2 and Deploy
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST_TEST }}  # EC2 public IP or DNS
+        username: ${{ secrets.EC2_USER }}  # e.g., ubuntu
+        key: ${{ secrets.EC2_KEY }}  # Your private SSH key
+        script: |
+          # Pull the latest Docker image
+          docker pull omkokate2902/family-tree-testing:latest
+
+          # Stop and remove the existing container
+          docker stop family-tree-testing || true
+          docker rm family-tree-testing || true
+
+          # Run the new container with port 3000:3000
+          docker run -d --name family-tree-testing -p 3000:3000 -e DB_URI="${{ secrets.DB_URI }}" -e JWT_SECRET="${{ secrets.JWT_SECRET }}" omkokate2902/family-tree-testing:latest
